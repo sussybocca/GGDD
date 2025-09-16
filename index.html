@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Fauxipedia</title>
+<title>Fauxipedia Social</title>
 <style>
   body {
     margin: 0;
@@ -34,6 +34,7 @@
   }
   nav a:hover { text-decoration: underline; }
   .article { border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; color: white; }
+  .post { margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; }
 </style>
 </head>
 <body>
@@ -48,8 +49,6 @@
   <br><br>
   <button id="google-login">Login with Google</button>
   <button id="anonymous-login">Login Anonymously</button>
-  <button id="apple-login">Login with Apple</button>
-  <button id="gamecenter-login">Login with Game Center</button>
 </div>
 
 <!-- MAIN SITE -->
@@ -58,6 +57,7 @@
     <a href="#" onclick="showPage('articles')">Articles</a> |
     <a href="#" onclick="showPage('minigames')">Mini Games</a> |
     <a href="#" onclick="showPage('about')">About</a> |
+    <a href="#" onclick="showPage('social')">Social</a> |
     <button id="logoutBtn">Logout</button>
   </nav>
 
@@ -74,7 +74,16 @@
 
   <div id="about-page" class="page" style="display:none;">
     <h2>About Fauxipedia</h2>
-    <p>This is a fake Wikipedia project for testing purposes.</p>
+    <p>This is a fake Wikipedia project mixing articles, social feed, and fun experiments.</p>
+  </div>
+
+  <div id="social-page" class="page" style="display:none;">
+    <h2>Social Feed</h2>
+    <div>
+      <input type="text" id="postContent" placeholder="Write a new post...">
+      <button id="postBtn">Post</button>
+    </div>
+    <div id="socialFeed"></div>
   </div>
 </div>
 
@@ -84,10 +93,15 @@
   import { 
     getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously,
     createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signOut, onAuthStateChanged, OAuthProvider
+    signOut, onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { 
+    getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy 
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { 
+    initializeAppCheck, ReCaptchaV3Provider 
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check.js";
 
-  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyB6xF5RTX6wy87TT17q61nUzoHI70JBkcA",
     authDomain: "funfu-b4ad8.firebaseapp.com",
@@ -98,47 +112,76 @@
     measurementId: "G-57DN56Z4VM"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
-  const auth = getAuth(app);
 
+  const appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider('6Ld58csrAAAAABsusleaMoL8CN2phP4Q7b8Rs-X7'),
+    isTokenAutoRefreshEnabled: true
+  });
+
+  const auth = getAuth(app);
+  const db = getFirestore(app);
   const googleProvider = new GoogleAuthProvider();
-  const appleProvider = new OAuthProvider('apple.com');
-  const gameCenterProvider = new OAuthProvider('gc.apple.com'); // placeholder
 
   const authContainer = document.getElementById("auth-container");
   const mainContainer = document.getElementById("main-container");
 
-  // Pages
   function showPage(page){
     const pages = document.querySelectorAll(".page");
     pages.forEach(p => p.style.display="none");
     document.getElementById(`${page}-page`).style.display="block";
   }
 
-  // Fake 20 articles
+  // --- FULL 3 ARTICLES ~100 words each ---
   const articlesDiv = document.getElementById("articles");
-  for(let i=1;i<=20;i++){
-    const article = document.createElement("div");
-    article.className = "article";
-    article.innerHTML = `<h3>Fake Article ${i}</h3><p>${"Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(30)}</p>`;
-    articlesDiv.appendChild(article);
+  const fakeArticles = [
+    {
+      title: "The Cardiean Corporation (1776)",
+      content: "Cardiean Corporation, founded by John Coal in 1776, was more than a business—it was a hidden empire. Combining hotels, restaurants, gold mines, and secretive dealings, it required members to commit theft and violence. The legendary Gold Cubes were the ultimate reward; only one survives today, valued at one trillion dollars. Despite its dark practices, the corporation influenced politics, economics, and culture across continents. Stories claim hidden vaults still exist, guarded by loyalists. While historians doubt many claims, Cardiean remains a symbol of greed and power, illustrating how wealth and secrecy can dominate societies and shape history in unexpected ways."
+    },
+    {
+      title: "The Steam Cogitator (1820)",
+      content: "The Steam Cogitator, built in London in 1820, was an early attempt at a programmable mechanical computer powered entirely by steam. Using pistons, gears, and massive boilers, it could perform calculations and supposedly even translate codes. Explosions were frequent, drawing criticism from engineers and officials. Secret reports suggest governments used Cogitators for cryptography long before electronic computers existed. Surviving diagrams reveal a surprisingly sophisticated design, foreshadowing modern computing. The machine represents humanity’s early pursuit of automation, highlighting the creativity and daring of engineers experimenting with steam, metal, and mechanical logic, long before the digital age transformed computation and information sharing worldwide."
+    },
+    {
+      title: "The Time Machine Syndicate (3025)",
+      content: "By 3025, the Time Machine Syndicate dominated temporal travel, commercializing journeys across centuries. Students could attend schools in ancient civilizations, miners extracted resources from the future, and historians observed past events firsthand. However, such access caused paradoxes, timeline fractures, and wars over disputed histories. The infamous Timeline Crash erased twenty parallel Earths. Despite regulation attempts, the Syndicate remains profitable, driven by public demand and the lure of forbidden knowledge. Its existence raises ethical questions about the manipulation of time, responsibility for alternate histories, and the balance between technological ambition and human consequences, making it both a wonder and a cautionary tale for society."
+    }
+  ];
+
+  for (let i = 0; i < fakeArticles.length; i++) {
+    const a = document.createElement("div");
+    a.className = "article";
+    a.innerHTML = `<h3>${fakeArticles[i].title}</h3><p>${fakeArticles[i].content}</p>`;
+    articlesDiv.appendChild(a);
   }
 
-  // Auth state listener
-  onAuthStateChanged(auth, user=>{
+  // --- AUTH STATE ---
+  onAuthStateChanged(auth, async user=>{
     if(user){
       authContainer.style.display="none";
       mainContainer.style.display="block";
       showPage('articles');
+
+      const usersRef = collection(db, "users");
+      const userDoc = { 
+        username: user.displayName || user.email || "Anonymous",
+        email: user.email || "",
+        createdAt: serverTimestamp(),
+        displayName: user.displayName || "",
+        bio: "",
+        profilePictureUrl: user.photoURL || ""
+      };
+      await addDoc(usersRef, userDoc).catch(()=>{});
+      loadSocialFeed();
     } else {
       authContainer.style.display="block";
       mainContainer.style.display="none";
     }
   });
 
-  // Login/Signup handlers
+  // --- LOGIN / SIGNUP ---
   document.getElementById("signup").addEventListener("click", async ()=>{
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -163,19 +206,36 @@
     catch(err){ alert(err.message); }
   });
 
-  document.getElementById("apple-login").addEventListener("click", async ()=>{
-    try{ await signInWithPopup(auth, appleProvider); } 
-    catch(err){ alert(err.message); }
-  });
-
-  document.getElementById("gamecenter-login").addEventListener("click", async ()=>{
-    try{ await signInWithPopup(auth, gameCenterProvider); } 
-    catch(err){ alert(err.message); }
-  });
-
   document.getElementById("logoutBtn").addEventListener("click", async ()=>{
     await signOut(auth);
   });
+
+  // --- SOCIAL FEED ---
+  const socialFeedDiv = document.getElementById("socialFeed");
+  document.getElementById("postBtn").addEventListener("click", async ()=>{
+    const content = document.getElementById("postContent").value;
+    if(!content) return;
+    await addDoc(collection(db, "posts"), {
+      userId: auth.currentUser.uid,
+      content,
+      createdAt: serverTimestamp()
+    });
+    document.getElementById("postContent").value="";
+    loadSocialFeed();
+  });
+
+  async function loadSocialFeed(){
+    socialFeedDiv.innerHTML = "";
+    const q = query(collection(db,"posts"), orderBy("createdAt","desc"));
+    const snapshot = await getDocs(q);
+    snapshot.forEach(doc=>{
+      const post = doc.data();
+      const div = document.createElement("div");
+      div.className = "post";
+      div.textContent = post.content;
+      socialFeedDiv.appendChild(div);
+    });
+  }
 
 </script>
 </body>
