@@ -2,33 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fake Wikipedia App</title>
+  <title>Fauxipedia</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #main-container { display: none; }
+    .article { border-bottom: 1px solid #ccc; margin-bottom: 20px; padding-bottom: 10px; }
+    input { margin: 5px; padding: 5px; }
+    button { margin: 5px; padding: 5px 10px; }
+  </style>
 </head>
 <body>
   <h1>Welcome to Fauxipedia</h1>
 
   <div id="auth-container">
-    <button id="google-login">Login with Google</button>
-    <br><br>
+    <h2>Login / Signup</h2>
+
+    <!-- Email/Password -->
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Password">
     <button id="signup">Sign Up</button>
     <button id="login">Login</button>
+    <br>
+
+    <!-- Google Login -->
+    <button id="google-login">Login with Google</button>
+
+    <!-- Anonymous Login -->
+    <button id="anonymous-login">Login Anonymously</button>
+
+    <!-- Apple / Game Center -->
+    <button id="apple-login">Login with Apple</button>
+    <button id="gamecenter-login">Login with Game Center</button>
   </div>
 
-  <div id="main-container" style="display:none;">
-    <h2>Articles Page</h2>
+  <div id="main-container">
+    <h2>Articles</h2>
     <button id="logoutBtn">Logout</button>
     <div id="articles"></div>
   </div>
 
   <script type="module">
-    // Import Firebase
+    // Firebase imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { 
+      getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously,
+      createUserWithEmailAndPassword, signInWithEmailAndPassword,
+      signOut, onAuthStateChanged, OAuthProvider
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-    // Your Firebase config
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyB6xF5RTX6wy87TT17q61nUzoHI70JBkcA",
       authDomain: "funfu-b4ad8.firebaseapp.com",
@@ -43,33 +66,39 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+
+    // Providers
+    const googleProvider = new GoogleAuthProvider();
+    const appleProvider = new OAuthProvider('apple.com');
+    const gameCenterProvider = new OAuthProvider('gc.apple.com'); // Example, placeholder
 
     // DOM elements
     const authContainer = document.getElementById("auth-container");
     const mainContainer = document.getElementById("main-container");
     const articlesDiv = document.getElementById("articles");
 
-    // Example fake articles
-    const fakeArticles = [
-      { title: "Cardiean Business", content: "John Coal created the first Cardiean business in 1776..." },
-      { title: "Time Machine 3025", content: "By 3025, time machines became a daily commodity..." },
-      { title: "Flying Cars 2025", content: "Flying cars revolutionized transport in 2025..." },
-      { title: "Other Fake Article", content: "Lorem ipsum dolor sit amet..." }
-    ];
+    // Fake 20 articles (~300 words each placeholder)
+    const fakeArticles = [];
+    for(let i=1;i<=20;i++){
+      fakeArticles.push({
+        title: `Fake Article ${i}`,
+        content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Article ${i} content continues... `.repeat(30)
+      });
+    }
 
     function displayArticles() {
       articlesDiv.innerHTML = "";
-      fakeArticles.forEach(a => {
+      fakeArticles.forEach(a=>{
         const articleEl = document.createElement("div");
+        articleEl.className = "article";
         articleEl.innerHTML = `<h3>${a.title}</h3><p>${a.content}</p>`;
         articlesDiv.appendChild(articleEl);
       });
     }
 
     // Auth state listener
-    onAuthStateChanged(auth, user => {
-      if (user) {
+    onAuthStateChanged(auth, user=>{
+      if(user){
         authContainer.style.display = "none";
         mainContainer.style.display = "block";
         displayArticles();
@@ -79,41 +108,46 @@
       }
     });
 
-    // Google login
-    document.getElementById("google-login").addEventListener("click", async () => {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (err) {
-        console.error(err);
-      }
-    });
-
-    // Email/Password signup
-    document.getElementById("signup").addEventListener("click", async () => {
+    // Login/Signup handlers
+    document.getElementById("signup").addEventListener("click", async ()=>{
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        console.error(err);
-      }
+      try{ await createUserWithEmailAndPassword(auth,email,password); } 
+      catch(err){ console.error(err); alert(err.message); }
     });
 
-    // Email/Password login
-    document.getElementById("login").addEventListener("click", async () => {
+    document.getElementById("login").addEventListener("click", async ()=>{
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        console.error(err);
-      }
+      try{ await signInWithEmailAndPassword(auth,email,password); } 
+      catch(err){ console.error(err); alert(err.message); }
+    });
+
+    document.getElementById("google-login").addEventListener("click", async ()=>{
+      try{ await signInWithPopup(auth, googleProvider); } 
+      catch(err){ console.error(err); alert(err.message); }
+    });
+
+    document.getElementById("anonymous-login").addEventListener("click", async ()=>{
+      try{ await signInAnonymously(auth); } 
+      catch(err){ console.error(err); alert(err.message); }
+    });
+
+    document.getElementById("apple-login").addEventListener("click", async ()=>{
+      try{ await signInWithPopup(auth, appleProvider); } 
+      catch(err){ console.error(err); alert(err.message); }
+    });
+
+    document.getElementById("gamecenter-login").addEventListener("click", async ()=>{
+      try{ await signInWithPopup(auth, gameCenterProvider); } 
+      catch(err){ console.error(err); alert(err.message); }
     });
 
     // Logout
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
+    document.getElementById("logoutBtn").addEventListener("click", async ()=>{
       await signOut(auth);
     });
+
   </script>
 </body>
 </html>
