@@ -1,0 +1,150 @@
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyB6xF5RTX6wy87TT17q61nUzoHI70JBkcA",
+    authDomain: "funfu-b4ad8.firebaseapp.com",
+    projectId: "funfu-b4ad8",
+    storageBucket: "funfu-b4ad8.firebasestorage.app",
+    messagingSenderId: "400767863064",
+    appId: "1:400767863064:web:182b8d5f79aceacf59b66d",
+    measurementId: "G-57DN56Z4VM"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
+  // ========================
+  // Dialogue lines (1–2000)
+  // ========================
+  const dialogue1 = "Dialogue line 1: Nathen wakes up early for his first day at school.";
+  const dialogue2 = "Dialogue line 2: He sees Cass waiting at the bus stop, smiling.";
+  const dialogue3 = "Dialogue line 3: Nathen thinks about what challenges he might face today.";
+  const dialogue4 = "Dialogue line 4: On the way to school, Nathen notices a group of students talking loudly.";
+  const dialogue5 = "Dialogue line 5: One of the students glances at him suspiciously.";
+  const dialogue6 = "Dialogue line 6: Nathen reminds himself to stay confident.";
+  const dialogue7 = "Dialogue line 7: Cass waves at him as they approach the school gates.";
+  const dialogue8 = "Dialogue line 8: Nathen and Cass enter the school together.";
+  const dialogue9 = "Dialogue line 9: The hallway is crowded with students chatting and lockers slamming.";
+  const dialogue10 = "Dialogue line 10: Nathen feels nervous but excited for the new semester.";
+  const dialogue11 = "Dialogue line 11: He hears Isaiah muttering something under his breath.";
+  const dialogue12 = "Dialogue line 12: Nathen and Cass head to their first class together.";
+  const dialogue13 = "Dialogue line 13: The teacher greets them with a warm smile.";
+  const dialogue14 = "Dialogue line 14: Nathen takes a seat and notices Landen across the room.";
+  const dialogue15 = "Dialogue line 15: Landen whispers a joke and Nathen chuckles quietly.";
+  const dialogue16 = "Dialogue line 16: Cass passes Nathen a note with a smiley face.";
+  const dialogue17 = "Dialogue line 17: Nathen feels a wave of courage as the class begins.";
+  const dialogue18 = "Dialogue line 18: He glances at the board and starts copying notes.";
+  const dialogue19 = "Dialogue line 19: The bell rings, signaling a break in class.";
+  const dialogue20 = "Dialogue line 20: Nathen walks to the hallway and sees a familiar face.";
+</script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ultimate HTML + Photo + Animation Editor</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+    header { background: #222; color: white; padding: 1rem; text-align: center; }
+    main { display: flex; gap: 1rem; padding: 1rem; flex-wrap: wrap; }
+    section { background: white; padding: 1rem; border-radius: 12px; flex: 1; min-width: 300px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    textarea { width: 100%; height: 200px; border-radius: 8px; padding: 0.5rem; }
+    iframe { width: 100%; height: 250px; border: 1px solid #ccc; border-radius: 8px; }
+    canvas { width: 100%; border: 1px solid #ccc; border-radius: 8px; }
+    button { margin: 0.5rem 0; padding: 0.5rem 1rem; border: none; border-radius: 8px; background: #007bff; color: white; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    #dragDropZone { border: 2px dashed #007bff; border-radius: 12px; padding: 2rem; text-align: center; color: #007bff; margin-top: 1rem; display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ultimate HTML + Photo + Animation Editor</h1>
+  </header>
+  <main>
+    <section>
+      <h2>HTML Editor</h2>
+      <textarea id="htmlCode" placeholder="Write or paste HTML here..."></textarea><br>
+      <button onclick="previewCode()">Preview</button>
+      <button onclick="downloadCode()">Download</button>
+      <iframe id="previewFrame"></iframe>
+      <button onclick="toggleDragDrop()">Enable Drag & Drop Mode</button>
+      <div id="dragDropZone">Drag & Drop your HTML code here</div>
+    </section>
+    <section>
+      <h2>Photo & Animation Editor</h2>
+      <input type="file" id="uploadImage" accept="image/*"><br>
+      <canvas id="photoCanvas" width="400" height="300"></canvas><br>
+      <button onclick="applyFilter('grayscale')">Grayscale</button>
+      <button onclick="applyFilter('invert')">Invert</button>
+      <button onclick="animateImage()">Animate</button>
+    </section>
+  </main>
+  <script>
+    function previewCode() {
+      const code = document.getElementById('htmlCode').value;
+      const frame = document.getElementById('previewFrame').contentWindow.document;
+      frame.open();
+      frame.write(code);
+      frame.close();
+    }
+    function downloadCode() {
+      const code = document.getElementById('htmlCode').value;
+      const blob = new Blob([code], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'code.html';
+      a.click();
+    }
+    function toggleDragDrop() {
+      const zone = document.getElementById('dragDropZone');
+      zone.style.display = zone.style.display === 'none' ? 'block' : 'none';
+    }
+    const zone = document.getElementById('dragDropZone');
+    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('drop', e => { e.preventDefault(); const text = e.dataTransfer.getData('text'); document.getElementById('htmlCode').value = text; });
+    const canvas = document.getElementById('photoCanvas');
+    const ctx = canvas.getContext('2d');
+    let img = new Image();
+    document.getElementById('uploadImage').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) { img.src = evt.target.result; };
+        reader.readAsDataURL(file);
+      }
+    });
+    img.onload = () => { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img, 0, 0, canvas.width, canvas.height); };
+    function applyFilter(type) {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        if (type === 'grayscale') {
+          let avg = (data[i] + data[i+1] + data[i+2]) / 3;
+          data[i] = data[i+1] = data[i+2] = avg;
+        } else if (type === 'invert') {
+          data[i] = 255 - data[i]; data[i+1] = 255 - data[i+1]; data[i+2] = 255 - data[i+2];
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+    }
+    function animateImage() {
+      let pos = 0;
+      function step() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img, pos, 0, canvas.width, canvas.height);
+        pos = (pos + 2) % canvas.width;
+        requestAnimationFrame(step);
+      }
+      step();
+    }
+  </script>
+</body>
+</html>
