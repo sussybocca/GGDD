@@ -1,106 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Fauxipedia Social</title>
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: url('https://images.unsplash.com/photo-1615559499593-d0ec58d7d8de?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
-    background-size: cover;
-    color: white;
-  }
-  .login-container, .page-container {
-    background: rgba(0,0,0,0.7);
-    padding: 30px;
-    border-radius: 15px;
-    max-width: 900px;
-    margin: 50px auto;
-  }
-  input, button {
-    width: 90%;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-  }
-  button { cursor: pointer; background: #1e90ff; color: white; font-weight: bold; }
-  nav a {
-    margin: 0 10px;
-    color: #1e90ff;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  nav a:hover { text-decoration: underline; }
-  .article { border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; color: white; }
-  .post { margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; }
-</style>
+  <meta charset="UTF-8">
+  <title>FakeWiki Social</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+    }
+    .container { max-width: 800px; margin: 50px auto; }
+    input, button { padding: 10px; margin: 5px 0; width: 100%; }
+    .hidden { display: none; }
+    .post { background: #222; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+  </style>
 </head>
 <body>
+<div class="container">
+  <h1>FakeWiki Social</h1>
 
-<!-- LOGIN SCREEN -->
-<div id="auth-container" class="login-container">
-  <h1>Welcome to Fauxipedia</h1>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <button id="signup">Sign Up</button>
-  <button id="login">Login</button>
-  <br><br>
-  <button id="google-login">Login with Google</button>
-  <button id="anonymous-login">Login Anonymously</button>
-</div>
-
-<!-- MAIN SITE -->
-<div id="main-container" class="page-container" style="display:none;">
-  <nav>
-    <a href="#" onclick="showPage('articles')">Articles</a> |
-    <a href="#" onclick="showPage('minigames')">Mini Games</a> |
-    <a href="#" onclick="showPage('about')">About</a> |
-    <a href="#" onclick="showPage('social')">Social</a> |
-    <button id="logoutBtn">Logout</button>
-  </nav>
-
-  <!-- Pages -->
-  <div id="articles-page" class="page">
-    <h2>Articles</h2>
-    <div id="articles"></div>
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen">
+    <h2>Login / Sign Up</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="email-login">Login / Sign Up</button>
+    <button id="google-login">Login with Google</button>
+    <button id="anonymous-login">Login Anonymously</button>
   </div>
 
-  <div id="minigames-page" class="page" style="display:none;">
-    <h2>Mini Games</h2>
-    <p>Coming soon!</p>
-  </div>
-
-  <div id="about-page" class="page" style="display:none;">
-    <h2>About Fauxipedia</h2>
-    <p>This is a fake Wikipedia project mixing articles, social feed, and fun experiments.</p>
-  </div>
-
-  <div id="social-page" class="page" style="display:none;">
-    <h2>Social Feed</h2>
-    <div>
-      <input type="text" id="postContent" placeholder="Write a new post...">
-      <button id="postBtn">Post</button>
+  <!-- MAIN APP -->
+  <div id="main-app" class="hidden">
+    <h2>Welcome to FakeWiki</h2>
+    <div id="articles">
+      <div class="post">
+        <h3>Article 1: Quantum Sandwich</h3>
+        <p>This 100-word article is about a futuristic invention called the Quantum Sandwich. It allows food to exist in multiple states simultaneously, giving breakfast lovers endless possibilities. Scientists discovered that by vibrating atoms at a specific frequency, the sandwich could taste differently depending on your mood. The Quantum Sandwich became a cultural phenomenon, influencing culinary arts and even music. Restaurants worldwide competed to create the most advanced flavors. Ethical debates emerged about over-consuming quantum meals. In 2042, a law was passed regulating quantum food intake. Quantum Sandwich remains a symbol of human creativity and experimental cuisine in the 22nd century.</p>
+      </div>
+      <div class="post">
+        <h3>Article 2: Anti-Gravity Umbrella</h3>
+        <p>The Anti-Gravity Umbrella, invented in 2077, is a marvel of engineering. By emitting a controlled gravitational field, it allows users to float slightly above the ground while staying dry. Fashion designers adapted its elegant style for city life, and it became a symbol of prestige. Safety protocols were necessary, as early prototypes caused mild floating accidents. Schools integrated anti-gravity training exercises to prevent injuries. The umbrella also became a tourist attraction, offering floating sightseeing tours. By 2090, improved models could carry small pets safely. The Anti-Gravity Umbrella represents humanity's ability to combine practicality and whimsical innovation, forever changing daily life in cities.</p>
+      </div>
+      <div class="post">
+        <h3>Article 3: Holographic Time Machine</h3>
+        <p>In 3025, the Holographic Time Machine allowed users to experience alternate histories without leaving their living rooms. Powered by quantum neural interfaces, it created fully immersive simulations of past, present, and potential futures. Students explored historical events firsthand, artists gained inspiration from future possibilities, and psychologists used it for therapy. The device sparked debates on reality perception and ethics. Governments regulated its use to prevent misinformation. Personal versions became luxury items, often displayed in museums as art. Despite ethical concerns, the Holographic Time Machine represents the ultimate intersection of technology and imagination, giving humanity a safe window into the fabric of time and history.</p>
+      </div>
     </div>
-    <div id="socialFeed"></div>
+    <button id="logout">Logout</button>
   </div>
 </div>
 
+<!-- Firebase SDKs -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-  import { 
-    getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously,
-    createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signOut, onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  import { 
-    getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy 
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-  import { 
-    initializeAppCheck, ReCaptchaV3Provider 
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check.js";
+  import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB6xF5RTX6wy87TT17q61nUzoHI70JBkcA",
@@ -113,130 +70,54 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+  getAnalytics(app);
 
-  const appCheck = initializeAppCheck(app, {
+  // App Check
+  initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider('6Ld58csrAAAAABsusleaMoL8CN2phP4Q7b8Rs-X7'),
     isTokenAutoRefreshEnabled: true
   });
 
+  // Auth
   const auth = getAuth(app);
-  const db = getFirestore(app);
-  const googleProvider = new GoogleAuthProvider();
+  const loginScreen = document.getElementById("login-screen");
+  const mainApp = document.getElementById("main-app");
 
-  const authContainer = document.getElementById("auth-container");
-  const mainContainer = document.getElementById("main-container");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
 
-  function showPage(page){
-    const pages = document.querySelectorAll(".page");
-    pages.forEach(p => p.style.display="none");
-    document.getElementById(`${page}-page`).style.display="block";
-  }
-
-  // --- FULL 3 ARTICLES ~100 words each ---
-  const articlesDiv = document.getElementById("articles");
-  const fakeArticles = [
-    {
-      title: "The Cardiean Corporation (1776)",
-      content: "Cardiean Corporation, founded by John Coal in 1776, was more than a business—it was a hidden empire. Combining hotels, restaurants, gold mines, and secretive dealings, it required members to commit theft and violence. The legendary Gold Cubes were the ultimate reward; only one survives today, valued at one trillion dollars. Despite its dark practices, the corporation influenced politics, economics, and culture across continents. Stories claim hidden vaults still exist, guarded by loyalists. While historians doubt many claims, Cardiean remains a symbol of greed and power, illustrating how wealth and secrecy can dominate societies and shape history in unexpected ways."
-    },
-    {
-      title: "The Steam Cogitator (1820)",
-      content: "The Steam Cogitator, built in London in 1820, was an early attempt at a programmable mechanical computer powered entirely by steam. Using pistons, gears, and massive boilers, it could perform calculations and supposedly even translate codes. Explosions were frequent, drawing criticism from engineers and officials. Secret reports suggest governments used Cogitators for cryptography long before electronic computers existed. Surviving diagrams reveal a surprisingly sophisticated design, foreshadowing modern computing. The machine represents humanity’s early pursuit of automation, highlighting the creativity and daring of engineers experimenting with steam, metal, and mechanical logic, long before the digital age transformed computation and information sharing worldwide."
-    },
-    {
-      title: "The Time Machine Syndicate (3025)",
-      content: "By 3025, the Time Machine Syndicate dominated temporal travel, commercializing journeys across centuries. Students could attend schools in ancient civilizations, miners extracted resources from the future, and historians observed past events firsthand. However, such access caused paradoxes, timeline fractures, and wars over disputed histories. The infamous Timeline Crash erased twenty parallel Earths. Despite regulation attempts, the Syndicate remains profitable, driven by public demand and the lure of forbidden knowledge. Its existence raises ethical questions about the manipulation of time, responsibility for alternate histories, and the balance between technological ambition and human consequences, making it both a wonder and a cautionary tale for society."
-    }
-  ];
-
-  for (let i = 0; i < fakeArticles.length; i++) {
-    const a = document.createElement("div");
-    a.className = "article";
-    a.innerHTML = `<h3>${fakeArticles[i].title}</h3><p>${fakeArticles[i].content}</p>`;
-    articlesDiv.appendChild(a);
-  }
-
-  // --- AUTH STATE ---
-  onAuthStateChanged(auth, async user=>{
-    if(user){
-      authContainer.style.display="none";
-      mainContainer.style.display="block";
-      showPage('articles');
-
-      const usersRef = collection(db, "users");
-      const userDoc = { 
-        username: user.displayName || user.email || "Anonymous",
-        email: user.email || "",
-        createdAt: serverTimestamp(),
-        displayName: user.displayName || "",
-        bio: "",
-        profilePictureUrl: user.photoURL || ""
-      };
-      await addDoc(usersRef, userDoc).catch(()=>{});
-      loadSocialFeed();
-    } else {
-      authContainer.style.display="block";
-      mainContainer.style.display="none";
+  document.getElementById("email-login").addEventListener("click", async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      await createUserWithEmailAndPassword(auth, email, password);
     }
   });
 
-  // --- LOGIN / SIGNUP ---
-  document.getElementById("signup").addEventListener("click", async ()=>{
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    try{ await createUserWithEmailAndPassword(auth,email,password); } 
-    catch(err){ alert(err.message); }
+  document.getElementById("google-login").addEventListener("click", async () => {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
   });
 
-  document.getElementById("login").addEventListener("click", async ()=>{
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    try{ await signInWithEmailAndPassword(auth,email,password); } 
-    catch(err){ alert(err.message); }
+  document.getElementById("anonymous-login").addEventListener("click", async () => {
+    await signInAnonymously(auth);
   });
 
-  document.getElementById("google-login").addEventListener("click", async ()=>{
-    try{ await signInWithPopup(auth, googleProvider); } 
-    catch(err){ alert(err.message); }
-  });
-
-  document.getElementById("anonymous-login").addEventListener("click", async ()=>{
-    try{ await signInAnonymously(auth); } 
-    catch(err){ alert(err.message); }
-  });
-
-  document.getElementById("logoutBtn").addEventListener("click", async ()=>{
+  document.getElementById("logout").addEventListener("click", async () => {
     await signOut(auth);
   });
 
-  // --- SOCIAL FEED ---
-  const socialFeedDiv = document.getElementById("socialFeed");
-  document.getElementById("postBtn").addEventListener("click", async ()=>{
-    const content = document.getElementById("postContent").value;
-    if(!content) return;
-    await addDoc(collection(db, "posts"), {
-      userId: auth.currentUser.uid,
-      content,
-      createdAt: serverTimestamp()
-    });
-    document.getElementById("postContent").value="";
-    loadSocialFeed();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loginScreen.classList.add("hidden");
+      mainApp.classList.remove("hidden");
+    } else {
+      loginScreen.classList.remove("hidden");
+      mainApp.classList.add("hidden");
+    }
   });
-
-  async function loadSocialFeed(){
-    socialFeedDiv.innerHTML = "";
-    const q = query(collection(db,"posts"), orderBy("createdAt","desc"));
-    const snapshot = await getDocs(q);
-    snapshot.forEach(doc=>{
-      const post = doc.data();
-      const div = document.createElement("div");
-      div.className = "post";
-      div.textContent = post.content;
-      socialFeedDiv.appendChild(div);
-    });
-  }
-
 </script>
 </body>
 </html>
